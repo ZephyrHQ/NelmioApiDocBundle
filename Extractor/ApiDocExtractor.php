@@ -361,6 +361,24 @@ class ApiDocExtractor
         return $annotation;
     }
 
+    protected function isFilter($class, $property=null)
+    {
+        return false;
+        $annotationName= 'Nelmio\ApiDocBundle\Annotation\Filter';
+        
+        if(isset($property)){
+            $propertyReflexion = new \ReflectionProperty($class, $property);
+            
+            $isPropertyFilter = null != $this->reader->getPropertyAnnotation($propertyReflexion, $annotationName);
+        }
+        
+        $classReflexion = new \ReflectionClass($class);
+        
+        return $isPropertyFilter or null != $this->reader->getClassAnnotation($classReflexion, $annotationName);       
+        
+    }
+
+
     protected function normalizeClassParameter($input)
     {
         $defaults = array(
@@ -489,6 +507,9 @@ class ApiDocExtractor
         if (is_array($array)) {
             unset($array['class']);
             foreach ($array as $name => $item) {
+                if(isset($array[$name]['class']) && $this->isFilter($array[$name]['class'], $name)){
+                    $array[$name]['filter'] = true;
+                }
                 $array[$name] = $this->clearClasses($item);
             }
         }

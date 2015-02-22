@@ -102,6 +102,7 @@ class JmsMetadataParser implements ParserInterface, PostParserInterface
     protected function doParse($className, $visited = array(), array $groups = array())
     {
         $meta = $this->factory->getMetadataForClass($className);
+        
 
         if (null === $meta) {
             throw new \InvalidArgumentException(sprintf("No metadata found for class %s", $className));
@@ -141,6 +142,7 @@ class JmsMetadataParser implements ParserInterface, PostParserInterface
                     $params[$name] = array(
                         'dataType'     => $dataType['normalized'],
                         'actualType'   => $dataType['actualType'],
+                        'class'        => $className,
                         'subType'      => $dataType['class'],
                         'required'     => false,
                         'default'      => isset($defaultProperties[$item->name]) ? $defaultProperties[$item->name] : null,

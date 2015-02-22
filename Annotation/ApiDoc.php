@@ -411,7 +411,11 @@ class ApiDoc
      */
     public function addParameter($name, array $parameter)
     {
-        $this->parameters[$name] = $parameter;
+        if(isset($parameter['filter']) && $parameter['filter']){
+            $this->addFilter($name, $parameter);
+        }else{
+            $this->parameters[$name] = $parameter;
+        }
     }
 
     /**
@@ -419,7 +423,9 @@ class ApiDoc
      */
     public function setParameters(array $parameters)
     {
-        $this->parameters = $parameters;
+        foreach($parameters as $name=>$parameter){
+            $this->addParameter($name, $parameter);
+        }
     }
 
     /**
